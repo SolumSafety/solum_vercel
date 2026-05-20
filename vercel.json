@@ -1,0 +1,20 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "next build",
+  "devCommand": "next dev",
+  "installCommand": "npm install",
+  "regions": ["syd1"],
+  "env": {
+    "NEXT_PUBLIC_SUPABASE_URL": "@supabase_url",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "@supabase_anon_key",
+    "SUPABASE_SERVICE_ROLE_KEY": "@supabase_service_role_key",
+    "SUPABASE_STORAGE_BUCKET": "@supabase_storage_bucket",
+    "STRIPE_SECRET_KEY": "@stripe_secret_key",
+    "STRIPE_WEBHOOK_SECRET": "@stripe_webhook_secret",
+    "PAYPAL_CLIENT_ID": "@paypal_client_id",
+    "PAYPAL_CLIENT_SECRET": "@paypal_client_secret",
+    "PAYPAL_WEBHOOK_ID": "@paypal_webhook_id",
+    "PAYPAL_ENV": "@paypal_env",
+    "SITE_URL": "@site_url"
+  }
+}
