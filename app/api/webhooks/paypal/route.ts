@@ -14,7 +14,11 @@ function parseCustomId(resource: any): { user_id?: string; product_sku?: string 
 
 export async function POST(req: NextRequest) {
   const rawBody = await req.text();
-  const verified = await verifyPayPalWebhook(req.headers, rawBody);
+  const verified = await verifyPayPalWebhook(
+  Object.fromEntries(req.headers.entries()),
+  rawBody,
+  process.env.PAYPAL_WEBHOOK_ID ?? ''
+);
 
   if (!verified) {
     return NextResponse.json({ error: 'Invalid PayPal webhook signature.' }, { status: 400 });
