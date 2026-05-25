@@ -1,3 +1,9 @@
+// Wix OAuth 2.0 integration
+// Docs: https://dev.wix.com/docs/build-apps/build-your-app/authentication/oauth
+
+const WIX_AUTH_BASE = 'https://www.wix.com/oauth2/token';
+const WIX_USERINFO   = 'https://www.wix.com/oauth2/userinfo';
+
 export function getWixAuthUrl(state?: string): string {
   const params = new URLSearchParams({
     client_id:     process.env.WIX_CLIENT_ID ?? '',
@@ -9,8 +15,12 @@ export function getWixAuthUrl(state?: string): string {
   return `https://www.wix.com/oauth2/authorize?${params}`;
 }
 
-export async function exchangeWixCode(code: string) {
-  const res = await fetch('https://www.wix.com/oauth2/token', {
+export async function exchangeWixCode(code: string): Promise<{
+  access_token: string;
+  refresh_token: string;
+  expires_in: number;
+}> {
+  const res = await fetch(WIX_AUTH_BASE, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -21,12 +31,20 @@ export async function exchangeWixCode(code: string) {
       code,
     }),
   });
-  if (!res.ok) throw new Error(`Wix token exchange failed: ${await res.text()}`);
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`Wix token exchange failed: ${err}`);
+  }
   return res.json();
 }
 
-export async function getWixMember(accessToken: string) {
-  const res = await fetch('https://www.wix.com/oauth2/userinfo', {
+export async function getWixMember(accessToken: string): Promise<{
+  id: string;
+  email: string;
+  name?: string;
+  picture?: string;
+}> {
+  const res = await fetch(WIX_USERINFO, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
   if (!res.ok) throw new Error('Failed to fetch Wix member info');
