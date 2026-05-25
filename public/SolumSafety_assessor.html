@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Assessor Login — Solum Safety Consulting</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+:root{
+  --navy:#1F3A5F;--blue:#3D5A80;--gold:#C9A84C;
+  --green:#287040;--red:#C03028;--amber:#c07828;
+  --bg:#f0f4f8;--white:#fff;--bdr:#d0dae6;
+  --text:#1c2c3c;--muted:#6a7d90;
+  --r:10px;--rs:6px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);
+  min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
+.card{background:var(--white);border-radius:14px;box-shadow:0 8px 40px rgba(31,58,95,.14);
+  width:100%;max-width:420px;overflow:hidden;}
+.card-header{background:linear-gradient(135deg,var(--navy) 0%,var(--blue) 100%);
+  padding:28px 32px;text-align:center;}
+.card-header img{height:52px;margin-bottom:14px;}
+.card-header h1{font-size:17px;font-weight:700;color:#d8e8f8;letter-spacing:.02em;}
+.card-header p{font-size:12px;color:#7a9ab8;margin-top:4px;}
+.card-body{padding:32px;}
+.step{display:none;}.step.active{display:block;animation:fadeIn .2s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.form-group{margin-bottom:18px;}
+label{display:block;font-size:12px;font-weight:600;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;}
+input{width:100%;padding:11px 14px;border:1.5px solid var(--bdr);border-radius:var(--rs);
+  font-size:14px;color:var(--text);background:var(--white);outline:none;transition:border .14s;}
+input:focus{border-color:var(--blue);}
+input[readonly]{background:#f4f6f8;color:var(--muted);}
+.otp-input{font-size:28px;font-weight:700;letter-spacing:14px;text-align:center;
+  font-family:monospace;padding:14px;}
+.btn{width:100%;padding:13px;background:var(--blue);color:#fff;border:none;
+  border-radius:var(--rs);font-size:14px;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:8px;transition:all .14s;}
+.btn:hover:not(:disabled){background:var(--navy);transform:translateY(-1px);}
+.btn:disabled{opacity:.55;cursor:not-allowed;transform:none;}
+.btn-gold{background:var(--gold);}.btn-gold:hover:not(:disabled){background:#a06018;}
+.status{padding:11px 14px;border-radius:var(--rs);font-size:13px;margin-bottom:16px;
+  display:none;align-items:flex-start;gap:8px;}
+.status.error{display:flex;background:#fef0ef;border:1px solid #f0c0bc;color:var(--red);}
+.status.success{display:flex;background:#edf7f0;border:1px solid #a0d8b0;color:var(--green);}
+.status.info{display:flex;background:#eef4fb;border:1px solid #b0c8e4;color:var(--blue);}
+.timer{font-size:12px;color:var(--muted);text-align:center;margin-top:12px;}
+.timer .count{font-weight:700;color:var(--navy);}
+.timer.expired .count{color:var(--red);}
+.resend-link{color:var(--blue);cursor:pointer;text-decoration:underline;display:none;}
+.step-dots{display:flex;justify-content:center;gap:8px;margin-bottom:20px;}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--bdr);}
+.dot.active{background:var(--blue);}
+.dot.done{background:var(--green);}
+.security-note{font-size:11px;color:var(--muted);text-align:center;margin-top:16px;
+  display:flex;align-items:center;justify-content:center;gap:4px;line-height:1.5;}
+.channels{display:flex;gap:8px;margin-bottom:18px;}
+.channel{flex:1;padding:10px;border-radius:var(--rs);border:1.5px solid var(--bdr);
+  text-align:center;font-size:12px;color:var(--muted);}
+.channel.active{border-color:var(--green);background:#edf7f0;color:var(--green);}
+.channel i{display:block;font-size:20px;margin-bottom:4px;}
+.success-icon{text-align:center;margin:16px 0;}
+.success-icon i{font-size:56px;color:var(--green);}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="card-header">
+    <img src="https://static.wixstatic.com/media/bc735f_b2e81e8865874f99ab4b9548dc6ef20e~mv2.png" alt="Solum Safety Consulting">
+    <h1>Assessor Secure Login</h1>
+    <p>Two-factor authentication required</p>
+  </div>
+  <div class="card-body">
+
+    <div class="step-dots">
+      <div class="dot active" id="dot1"></div>
+      <div class="dot" id="dot2"></div>
+      <div class="dot" id="dot3"></div>
+    </div>
+
+    <!-- STEP 1: Email entry -->
+    <div class="step active" id="step1">
+      <div id="s1status" class="status"></div>
+      <div class="form-group">
+        <label>Assessor Email Address</label>
+        <input type="email" id="emailInput" placeholder="Enter your assessor email"
+          value="solumsafetyconsulting@gmail.com" autocomplete="email">
+      </div>
+      <button class="btn" id="sendBtn" onclick="sendOTP()">
+        <i class="ti ti-send"></i> Send Verification Code
+      </button>
+      <div class="security-note">
+        <i class="ti ti-shield-lock" style="font-size:13px"></i>
+        Code sent to your registered email and phone
+      </div>
+    </div>
+
+    <!-- STEP 2: OTP entry -->
+    <div class="step" id="step2">
+      <div id="s2status" class="status"></div>
+      <div class="channels">
+        <div class="channel active" id="emailChannel">
+          <i class="ti ti-mail"></i>Email Sent
+        </div>
+        <div class="channel" id="smsChannel">
+          <i class="ti ti-device-mobile"></i>SMS
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Verified Email</label>
+        <input type="email" id="emailDisplay" readonly>
+      </div>
+      <div class="form-group">
+        <label>Enter 6-Digit Code</label>
+        <input type="text" id="codeInput" class="otp-input" maxlength="6"
+          placeholder="000000" inputmode="numeric" pattern="[0-9]*"
+          autocomplete="one-time-code" oninput="formatCode(this)">
+      </div>
+      <button class="btn btn-gold" id="verifyBtn" onclick="verifyOTP()">
+        <i class="ti ti-check"></i> Verify Code
+      </button>
+      <div class="timer" id="timer">
+        Code expires in <span class="count" id="countdown">10:00</span>
+      </div>
+      <div class="timer" style="margin-top:8px">
+        Didn't receive it?
+        <span class="resend-link" id="resendLink" onclick="resend()">Request new code</span>
+        <span id="resendWait">You can resend after <span id="resendCountdown">60</span>s</span>
+      </div>
+    </div>
+
+    <!-- STEP 3: Success -->
+    <div class="step" id="step3">
+      <div class="success-icon"><i class="ti ti-circle-check"></i></div>
+      <div class="status success" style="display:flex">
+        <i class="ti ti-shield-check"></i>
+        <span>Identity verified. Redirecting to Assessor Dashboard…</span>
+      </div>
+      <div id="assessorInfo" style="font-size:13px;color:var(--muted);text-align:center;margin-top:8px"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── Config ─────────────────────────────────────────────────────────────
+const API  = 'https://solum-vercel-solumvercel.vercel.app';
+const DASHBOARD_URL = '/admin-dashboard'; // Wix page to redirect to after login
+
+// ── State ──────────────────────────────────────────────────────────────
+let email = '';
+let timerInterval = null;
+let resendInterval = null;
+let expiryTime = null;
+
+// ── Step 1: Send OTP ───────────────────────────────────────────────────
+async function sendOTP() {
+  email = document.getElementById('emailInput').value.trim().toLowerCase();
+  if (!email) { showStatus('s1status','error','Please enter your email address.'); return; }
+
+  const btn = document.getElementById('sendBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="ti ti-loader" style="animation:spin 1s linear infinite"></i> Sending…';
+  clearStatus('s1status');
+
+  try {
+    const res = await fetch(`${API}/api/auth/send-otp`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ email })
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      showStatus('s1status','error', data.error || 'Could not send code. Try again.');
+      btn.disabled = false;
+      btn.innerHTML = '<i class="ti ti-send"></i> Send Verification Code';
+      return;
+    }
+
+    // Update channel indicators
+    if (data.channels?.sms) document.getElementById('smsChannel').classList.add('active');
+
+    showStatus('s1status','success','Code sent! Check your email and phone.');
+    goToStep(2);
+    document.getElementById('emailDisplay').value = email;
+    startTimer(10 * 60); // 10 minute countdown
+    startResendCooldown(60);
+
+  } catch(e) {
+    showStatus('s1status','error','Network error — check your connection and try again.');
+    btn.disabled = false;
+    btn.innerHTML = '<i class="ti ti-send"></i> Send Verification Code';
+  }
+}
+
+// ── Step 2: Verify OTP ─────────────────────────────────────────────────
+async function verifyOTP() {
+  const code = document.getElementById('codeInput').value.replace(/\D/g,'');
+  if (code.length !== 6) { showStatus('s2status','error','Please enter the full 6-digit code.'); return; }
+
+  const btn = document.getElementById('verifyBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="ti ti-loader" style="animation:spin 1s linear infinite"></i> Verifying…';
+  clearStatus('s2status');
+
+  try {
+    const res = await fetch(`${API}/api/auth/verify-otp`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ email, code })
+    });
+    const data = await res.json();
+
+    if (!res.ok || !data.verified) {
+      showStatus('s2status','error', data.error || 'Invalid code. Please try again.');
+      btn.disabled = false;
+      btn.innerHTML = '<i class="ti ti-check"></i> Verify Code';
+      document.getElementById('codeInput').value = '';
+      document.getElementById('codeInput').focus();
+      return;
+    }
+
+    // ✅ Verified — store session token
+    sessionStorage.setItem('assessor_token', data.token);
+    sessionStorage.setItem('assessor_email', data.assessor?.email || email);
+    sessionStorage.setItem('assessor_name',  data.assessor?.name  || 'Assessor');
+    clearInterval(timerInterval);
+    clearInterval(resendInterval);
+    goToStep(3);
+    document.getElementById('assessorInfo').textContent =
+      `Logged in as ${data.assessor?.name || email}`;
+    setTimeout(() => window.location.href = DASHBOARD_URL, 2000);
+
+  } catch(e) {
+    showStatus('s2status','error','Network error — check your connection and try again.');
+    btn.disabled = false;
+    btn.innerHTML = '<i class="ti ti-check"></i> Verify Code';
+  }
+}
+
+// ── Resend ─────────────────────────────────────────────────────────────
+async function resend() {
+  document.getElementById('resendLink').style.display = 'none';
+  document.getElementById('resendWait').style.display = 'inline';
+  document.getElementById('codeInput').value = '';
+  showStatus('s2status','info','Sending a new code…');
+
+  try {
+    await fetch(`${API}/api/auth/send-otp`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ email })
+    });
+    showStatus('s2status','success','New code sent. Check your email and phone.');
+    startTimer(10 * 60);
+    startResendCooldown(60);
+  } catch {
+    showStatus('s2status','error','Could not resend. Try again.');
+  }
+}
+
+// ── Timers ─────────────────────────────────────────────────────────────
+function startTimer(seconds) {
+  clearInterval(timerInterval);
+  const el = document.getElementById('countdown');
+  const timerEl = document.getElementById('timer');
+  let remaining = seconds;
+
+  function tick() {
+    const m = Math.floor(remaining / 60);
+    const s = remaining % 60;
+    el.textContent = `${m}:${String(s).padStart(2,'0')}`;
+    if (remaining <= 0) {
+      clearInterval(timerInterval);
+      timerEl.classList.add('expired');
+      el.textContent = 'EXPIRED';
+      showStatus('s2status','error','Code has expired. Request a new one.');
+      document.getElementById('verifyBtn').disabled = true;
+    }
+    remaining--;
+  }
+  tick();
+  timerInterval = setInterval(tick, 1000);
+}
+
+function startResendCooldown(seconds) {
+  clearInterval(resendInterval);
+  let remaining = seconds;
+  const waitEl = document.getElementById('resendWait');
+  const linkEl = document.getElementById('resendLink');
+  const countEl = document.getElementById('resendCountdown');
+  waitEl.style.display = 'inline'; linkEl.style.display = 'none';
+
+  resendInterval = setInterval(() => {
+    remaining--;
+    if (countEl) countEl.textContent = remaining;
+    if (remaining <= 0) {
+      clearInterval(resendInterval);
+      waitEl.style.display = 'none';
+      linkEl.style.display = 'inline';
+    }
+  }, 1000);
+}
+
+// ── UI helpers ─────────────────────────────────────────────────────────
+function goToStep(n) {
+  document.querySelectorAll('.step').forEach((el,i) => el.classList.toggle('active', i+1===n));
+  [1,2,3].forEach(i => {
+    const dot = document.getElementById('dot'+i);
+    dot.className = 'dot' + (i<n?' done':i===n?' active':'');
+  });
+  if (n===2) setTimeout(()=>document.getElementById('codeInput').focus(), 100);
+}
+function showStatus(id,type,msg) {
+  const el = document.getElementById(id);
+  el.className = `status ${type}`; el.style.display='flex';
+  el.innerHTML = `<i class="ti ti-${type==='error'?'alert-circle':type==='success'?'circle-check':'info-circle'}"></i><span>${msg}</span>`;
+}
+function clearStatus(id) { const el=document.getElementById(id); el.style.display='none'; }
+function formatCode(el) { el.value = el.value.replace(/\D/g,'').substring(0,6); }
+
+// Enter key support
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  if (document.getElementById('step1').classList.contains('active')) sendOTP();
+  if (document.getElementById('step2').classList.contains('active')) verifyOTP();
+});
+
+// Inject spin animation
+const style = document.createElement('style');
+style.textContent = '@keyframes spin{to{transform:rotate(360deg)}}';
+document.head.appendChild(style);
+</script>
+</body>
+</html>
