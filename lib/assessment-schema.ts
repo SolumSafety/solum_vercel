@@ -396,3 +396,4 @@ export function getOverallScore(responses: Record<string, number>, tier: 2 | 3):
     .filter((s): s is number => s !== null);
   return domainScores.length ? domainScores.reduce((a, b) => a + b, 0) / domainScores.length : 0;
 }
+ 
