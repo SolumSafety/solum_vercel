@@ -19,6 +19,6 @@ export function createWixAuthClient() {
 export function getWixAuthUrl(redirectUri: string): string {
   const clientId = process.env.WIX_CLIENT_ID;
   if (!clientId) throw new Error('WIX_CLIENT_ID not set');
-  
+
   return `https://www.wix.com/oauth/access?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=offline_access`;
 }
