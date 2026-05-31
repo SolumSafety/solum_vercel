@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
     const tokens = await exchangeWixCode(code);
 
     // 2. Get Wix member info
-    const wixMember = await getWixMember(tokens.access_token);
+    const wixMember = await getWixMember(tokens.accessToken);
 
     // 3. Look up or create matching Supabase user
     const supabase = createSupabaseAdminClient();
