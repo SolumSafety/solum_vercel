@@ -65,9 +65,9 @@ export async function GET(req: NextRequest) {
     await supabase.from('wix_tokens').upsert({
       user_id:       supabaseUserId,
       wix_member_id: wixMember.id,
-      access_token:  tokens.access_token,
-      refresh_token: tokens.refresh_token,
-      expires_at:    new Date(Date.now() + tokens.expires_in * 1000).toISOString(),
+      access_token:  tokens.accessToken,
+      refresh_token: tokens.refreshToken,
+      expires_at:    new Date(Date.now() + 3600 * 1000).toISOString(),
       updated_at:    new Date().toISOString(),
     }, { onConflict: 'user_id' });
 
