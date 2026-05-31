@@ -18,11 +18,11 @@
 //   'both'     — either photo or document acceptable
 //   'none'     — no evidence attachment required
 // ════════════════════════════════════════════════════════════════════════════
- 
+
 export type EvidenceType = 'photo' | 'document' | 'both' | 'none';
 export type RiskLevel = 'Critical' | 'High' | 'Moderate' | 'Low';
 export type TierApplicability = 2 | 3 | 'both';
- 
+
 export interface AssessmentQuestion {
   id:           string;              // e.g. "GOV-001"
   text:         string;              // question text
@@ -37,7 +37,7 @@ export interface AssessmentQuestion {
     legislation: string;
   };
 }
- 
+
 export interface AssessmentDomain {
   id:           string;
   title:        string;
@@ -49,11 +49,11 @@ export interface AssessmentDomain {
   desktopNote?: string;              // Tier 2 limitation note shown in report
   questions:    AssessmentQuestion[];
 }
- 
+
 // ── DOMAIN DEFINITIONS ──────────────────────────────────────────────────────
- 
+
 export const ASSESSMENT_DOMAINS: AssessmentDomain[] = [
- 
+
   // ── D01: Leadership & WHS Governance ────────────────────────────────────
   {
     id: 'governance', title: 'Leadership & WHS Governance',
@@ -72,7 +72,7 @@ export const ASSESSMENT_DOMAINS: AssessmentDomain[] = [
         trigger:{ threshold:2, risk:'High', flag:'Compliance register not updated for WHS Reg 2025 penalty changes — exposure to increased penalties', legislation:'WHS Reg 2025 (NSW) — Commenced 22 Aug 2025' } },
     ]
   },
- 
+
   // ── D02: Consultation & Communication ────────────────────────────────────
   {
     id: 'consultation', title: 'Consultation & Communication',
@@ -89,7 +89,7 @@ export const ASSESSMENT_DOMAINS: AssessmentDomain[] = [
       { id:'CON-005', text:'Are workers involved in developing and reviewing risk assessments, safe work procedures and incident investigation outcomes?', context:'ISO 45001 Cl.5.4 — worker participation in decision-making on WHS matters.', evidenceType:'both', evidenceLabel:'Upload sign-off records showing worker consultation on procedures', tier:3 },
     ]
   },
- 
+
   // ── D03: Risk Management ─────────────────────────────────────────────────
   {
     id: 'risk', title: 'Hazard Identification & Risk Management',
@@ -106,7 +106,7 @@ export const ASSESSMENT_DOMAINS: AssessmentDomain[] = [
       { id:'RISK-005', text:'Are residual risks communicated to all workers affected — including contractors — before work commences?', context:'ISO 45001 Cl.7.3 — workers must be aware of hazards and risks relevant to their work.', evidenceType:'both', evidenceLabel:'Upload briefing records, induction sign-on or pre-start meeting notes', tier:3 },
     ]
   },
- 
+
   // ── D04: Training & Competency ───────────────────────────────────────────
   {
     id: 'training', title: 'Training, Competency & Induction',
@@ -126,7 +126,7 @@ export const ASSESSMENT_DOMAINS: AssessmentDomain[] = [
         trigger:{ threshold:2, risk:'High', flag:'Mandatory training provider authorisation not verified — training may be invalid under WHS Reg 2025 training provider authorisation framework', legislation:'WHS Reg 2025 (NSW) — Training Provider Authorisation, commenced 22 Aug 2025' } },
     ]
   },
- 
+
   // ── D05: Incident Management ─────────────────────────────────────────────
   {
     id: 'incidents', title: 'Incident Reporting & Investigation',
@@ -144,7 +144,7 @@ export const ASSESSMENT_DOMAINS: AssessmentDomain[] = [
       { id:'INC-005', text:'Are incident trends analysed and reported to management/leadership quarterly, with patterns used to drive systemic improvements?', context:'ISO 45001 Cl.9.1 — performance evaluation. Trend analysis is a key leading/lagging indicator function.', evidenceType:'document', evidenceLabel:'Upload incident trend report or safety dashboard', tier:3 },
     ]
   },
- 
+
   // ── D06: Emergency Management ─────────────────────────────────────────────
   {
     id: 'emergency', title: 'Emergency Management & Preparedness',
@@ -163,7 +163,7 @@ export const ASSESSMENT_DOMAINS: AssessmentDomain[] = [
         trigger:{ threshold:2, risk:'High', flag:'Lithium-ion battery inventory not assessed for 25,000kg threshold — emergency plan lodgement obligation may exist under WHS Reg 2025 (NSW)', legislation:'WHS Reg 2025 (NSW) — Lithium Battery Emergency Planning, commenced 22 Aug 2025' } },
     ]
   },
- 
+
   // ── D07: Plant & Equipment ───────────────────────────────────────────────
   {
     id: 'plant', title: 'Plant, Equipment & PPE',
@@ -181,7 +181,7 @@ export const ASSESSMENT_DOMAINS: AssessmentDomain[] = [
         trigger:{ threshold:2, risk:'High', flag:'Electrical test and tag non-compliant or register absent', legislation:'AS/NZS 3760; WHS Reg 2025' } },
     ]
   },
- 
+
   // ── D08: Hazardous Chemicals ─────────────────────────────────────────────
   {
     id: 'chemicals', title: 'Hazardous Chemicals & Substances',
@@ -202,7 +202,7 @@ export const ASSESSMENT_DOMAINS: AssessmentDomain[] = [
         trigger:{ threshold:2, risk:'Critical', flag:'Crystalline silica dust controls insufficient — exposure standard breach risk and Silica Worker Register obligation triggered', legislation:'WHS Reg 2025 r.394; Model CoP Hazardous Chemicals' } },
     ]
   },
- 
+
   // ── D09: Document Control ─────────────────────────────────────────────────
   {
     id: 'documents', title: 'Document Control & WHS Records',
@@ -217,7 +217,7 @@ export const ASSESSMENT_DOMAINS: AssessmentDomain[] = [
       { id:'DOC-004', text:'Are all WHS documents assigned a review date and review cycle — with a tracking process to ensure reviews are completed on time?', context:'ISO 45001 Cl.7.5 — documented information must be reviewed and updated as necessary.', evidenceType:'document', evidenceLabel:'Upload document review schedule or register showing review status', tier:'both' },
     ]
   },
- 
+
   // ── D10: Psychosocial Risk ────────────────────────────────────────────────
   {
     id: 'psychosocial', title: 'Psychosocial Risk Management',
@@ -240,7 +240,7 @@ export const ASSESSMENT_DOMAINS: AssessmentDomain[] = [
         trigger:{ threshold:2, risk:'High', flag:'Psychosocial control effectiveness not monitored — risk of paper compliance only', legislation:'WHS Reg 2025 s.55G' } },
     ]
   },
- 
+
   // ── D11: Contractor & Supply Chain ───────────────────────────────────────
   {
     id: 'contractors', title: 'Contractor & Supply Chain Safety',
@@ -259,7 +259,7 @@ export const ASSESSMENT_DOMAINS: AssessmentDomain[] = [
         trigger:{ threshold:2, risk:'High', flag:'Demolition licence scope not reviewed under 2025 broadened definition — contractor licence class and supervision compliance may be insufficient', legislation:'WHS Reg 2025 (NSW) — Licensed Demolition Work, commenced 22 Aug 2025' } },
     ]
   },
- 
+
   // ── D12: Safe Work Procedures & SWMS ─────────────────────────────────────
   {
     id: 'swms', title: 'Safe Work Procedures & SWMS',
@@ -277,7 +277,7 @@ export const ASSESSMENT_DOMAINS: AssessmentDomain[] = [
       { id:'SWMS-005', text:'Are safe work procedures available at the worksite for workers to access, and do workers demonstrate understanding of the relevant procedure?', context:'WHS Reg 2025 r.301 — SWMS must be kept at the workplace where work is carried out.', evidenceType:'both', evidenceLabel:'Upload photo of SWMS at worksite or worker acknowledgement records', tier:3 },
     ]
   },
- 
+
   // ── D13: Officer Due Diligence ────────────────────────────────────────────
   {
     id: 'officer_dd', title: 'Officer Due Diligence (WHS Act s.27)',
@@ -296,7 +296,7 @@ export const ASSESSMENT_DOMAINS: AssessmentDomain[] = [
         trigger:{ threshold:2, risk:'Critical', flag:'No officer compliance verification — WHS Act s.27(f). Personal liability exposure.', legislation:'WHS Act 2011 s.27(f)' } },
     ]
   },
- 
+
   // ── D14: HSR & Worker Representation ─────────────────────────────────────
   {
     id: 'hsr', title: 'HSR & Worker Representation',
@@ -313,7 +313,7 @@ export const ASSESSMENT_DOMAINS: AssessmentDomain[] = [
       { id:'HSR-004', text:'Is there a documented issue resolution procedure covering: how issues are raised, steps for resolution, timeframes and escalation?', context:'WHS Act s.76 — HSR may require resolution of WHS issue. Procedure must exist.', evidenceType:'document', evidenceLabel:'Upload issue resolution procedure', tier:'both' },
     ]
   },
- 
+
   // ── D15: Notifiable Incidents ─────────────────────────────────────────────
   {
     id: 'notifiable', title: 'Notifiable Incidents & Regulatory Reporting',
@@ -329,7 +329,7 @@ export const ASSESSMENT_DOMAINS: AssessmentDomain[] = [
       { id:'NOT-004', text:'Are incident investigations reviewed to confirm no notifiable incidents have been incorrectly classified — with a periodic audit of the incident register?', context:'Under-classification risk — dangerous incidents in particular are often not recognised. Periodic audit reduces liability.', evidenceType:'document', evidenceLabel:'Upload incident register audit record or review checklist', tier:'both' },
     ]
   },
- 
+
   // ── D16: Fatigue & Hours of Work ─────────────────────────────────────────
   {
     id: 'fatigue', title: 'Fatigue & Hours of Work',
@@ -345,7 +345,7 @@ export const ASSESSMENT_DOMAINS: AssessmentDomain[] = [
       { id:'FAT-004', text:'Are fatigue-related incidents and near-misses tracked as a specific category — and is fatigue included as a potential contributing factor in all incident investigations?', context:'Model CoP: Fatigue — fatigue must be identified as a root cause where relevant. Tracking creates visibility.', evidenceType:'document', evidenceLabel:'Upload incident register showing fatigue category or investigation records', tier:'both' },
     ]
   },
- 
+
   // ── D17: Office / Physical Workplace (Tier 3 only) ───────────────────────
   {
     id: 'office_ra', title: 'Physical Workplace & Office Risk Assessment',
@@ -362,21 +362,21 @@ export const ASSESSMENT_DOMAINS: AssessmentDomain[] = [
       { id:'ORA-005', text:'Is the workplace free from slip, trip and fall hazards — cables managed, anti-slip at entries, wet floor signage used — with housekeeping maintained to standard?', context:'WHS Act s.19; Model CoP: Managing the Work Environment and Facilities.', evidenceType:'photo', evidenceLabel:'Upload photo of work area showing housekeeping and slip/trip controls', tier:3 },
     ]
   },
- 
+
 ];
- 
+
 // ── UTILITY FUNCTIONS ────────────────────────────────────────────────────────
- 
+
 export function getDomainsForTier(tier: 2 | 3): AssessmentDomain[] {
   return ASSESSMENT_DOMAINS.filter(d => d.tier === 'both' || d.tier === tier);
 }
- 
+
 export function getTotalQuestions(tier: 2 | 3): number {
   return getDomainsForTier(tier).reduce((sum, d) => {
     return sum + d.questions.filter(q => q.tier === 'both' || q.tier === tier).length;
   }, 0);
 }
- 
+
 export function getTriggersFromResponses(
   responses: Record<string, number>,
   tier: 2 | 3
@@ -403,7 +403,7 @@ export function getTriggersFromResponses(
     return (order[a.risk as RiskLevel] || 3) - (order[b.risk as RiskLevel] || 3);
   });
 }
- 
+
 export function getDomainScore(domainId: string, responses: Record<string, number>, tier: 2 | 3): number | null {
   const domain = ASSESSMENT_DOMAINS.find(d => d.id === domainId);
   if (!domain) return null;
@@ -413,7 +413,7 @@ export function getDomainScore(domainId: string, responses: Record<string, numbe
     .filter((s): s is number => s !== undefined && s > 0);
   return scores.length ? scores.reduce((a, b) => a + b, 0) / scores.length : null;
 }
- 
+
 export function getOverallScore(responses: Record<string, number>, tier: 2 | 3): number {
   const domains = getDomainsForTier(tier);
   const domainScores = domains
@@ -421,4 +421,3 @@ export function getOverallScore(responses: Record<string, number>, tier: 2 | 3):
     .filter((s): s is number => s !== null);
   return domainScores.length ? domainScores.reduce((a, b) => a + b, 0) / domainScores.length : 0;
 }
- 
