@@ -28,7 +28,10 @@ export async function GET(req: NextRequest) {
 
     let supabaseUserId: string;
 
-    // Check if user already exists via email
+   // Check if user already exists via email
+    if (!wixMember) {
+      return NextResponse.redirect(new URL('/login?error=member_not_found', req.url));
+    }
     const { data: existingUsers } = await supabase.auth.admin.listUsers();
     const existing = existingUsers?.users?.find(u => u.email === wixMember.email);
 
