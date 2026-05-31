@@ -1,52 +1,24 @@
-// Wix OAuth 2.0 integration
-// Docs: https://dev.wix.com/docs/build-apps/build-your-app/authentication/oauth
+import { createClient } from '@supabase/supabase-js';
 
-const WIX_AUTH_BASE = 'https://www.wix.com/oauth2/token';
-const WIX_USERINFO   = 'https://www.wix.com/oauth2/userinfo';
+export function createWixAuthClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-export function getWixAuthUrl(state?: string): string {
-  const params = new URLSearchParams({
-    client_id:     process.env.WIX_CLIENT_ID ?? '',
-    redirect_uri:  process.env.NEXT_PUBLIC_WIX_REDIRECT_URI ?? '',
-    response_type: 'code',
-    scope:         'offline_access',
-    state:         state ?? crypto.randomUUID(),
-  });
-  return `https://www.wix.com/oauth2/authorize?${params}`;
-}
-
-export async function exchangeWixCode(code: string): Promise<{
-  access_token: string;
-  refresh_token: string;
-  expires_in: number;
-}> {
-  const res = await fetch(WIX_AUTH_BASE, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      grant_type:    'authorization_code',
-      client_id:     process.env.WIX_CLIENT_ID,
-      client_secret: process.env.WIX_CLIENT_SECRET,
-      redirect_uri:  process.env.NEXT_PUBLIC_WIX_REDIRECT_URI,
-      code,
-    }),
-  });
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`Wix token exchange failed: ${err}`);
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error('Missing Supabase environment variables');
   }
-  return res.json();
+
+  return createClient(supabaseUrl, supabaseKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  });
 }
 
-export async function getWixMember(accessToken: string): Promise<{
-  id: string;
-  email: string;
-  name?: string;
-  picture?: string;
-}> {
-  const res = await fetch(WIX_USERINFO, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
-  if (!res.ok) throw new Error('Failed to fetch Wix member info');
-  return res.json();
+export function getWixAuthUrl(redirectUri: string): string {
+  const clientId = process.env.WIX_CLIENT_ID;
+  if (!clientId) throw new Error('WIX_CLIENT_ID not set');
+  
+  return `https://www.wix.com/oauth/access?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=offline_access`;
 }
